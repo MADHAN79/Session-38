@@ -1,19 +1,23 @@
 const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
-
+const connectDB = require('./config/db');
 const roomRoutes = require('./routes/roomRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+
+require('dotenv').config();
 
 const app = express();
+
+// Connect to Database
+connectDB();
+
+// Middleware
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.log(err));
-
-app.use('/api/rooms', roomRoutes);
+// Routes
+app.use('/api/customers', customerRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/rooms', roomRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
